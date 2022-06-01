@@ -1,5 +1,3 @@
-![FullStack Labs](app/assets/images/FSL-logo-portrait.png)
-
 # HeyURL! Code Challenge
 
 This repository has been created as a code challenge for candidates with
@@ -45,4 +43,4 @@ $ bin/rails server
 [http://localhost:3000](http://localhost:3000/)
 
 ## Challenge
-See [CHALLENGE.md](./CHALLENGE.md)
+[Take home assignment](https://fullstacklabs.notion.site/Ruby-on-Rails-Coding-Challenge-5d9c09b5edb44fb1bec3aea5c7eb7590)
