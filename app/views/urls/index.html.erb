@@ -1,6 +1,9 @@
 <% if flash[:notice] %>
   <div class="card-panel notice deep-orange"><%= flash[:notice] %></div>
 <% end %>
+<% if flash[:error] %>
+  <div class="card-panel notice deep-orange"><%= flash[:error] %></div>
+<% end %>
 <div class="row">
   <div class="col m12">
     <%= form_for @url do |f| %>

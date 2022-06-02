@@ -9,3 +9,4 @@ class Click < ApplicationRecord
 
   scope :platform_stats, -> (url_id) { select("platform, count(*) as clicks").order("platform ASC").where(url_id:url_id).group("platform") }
 end
+
