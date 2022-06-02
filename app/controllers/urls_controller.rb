@@ -3,7 +3,7 @@ class UrlsController < ApplicationController
   def index
     # recent 10 short urls
     @url = Url.new
-    @urls = Url.latest(10)
+    @urls = Url.order('created_at DESC').limit(10)
   end
 
   def create
@@ -18,21 +18,25 @@ class UrlsController < ApplicationController
 
   def show
     @url = Url.find_by(short_url:params['url'])
-    # implement queries
-    ['daily','browsers','platforms'].each do |name|
-      instance_variable_set("@{name}", [])
-    end
-  
-    Click.current_month_clicks(@url.id).each do |click| 
-      @daily_clicks <<  [click['day'],click['clicks'].to_i]
-    end
+    if @url
+      # implement queries
+      ['daily','browsers','platforms'].each do |name|
+        instance_variable_set("@#{name}", [])
+      end
     
-    Click.browser_stats(@url.id).each do |data|
-      @browsers_clicks << [data['browser'],data['clicks'].to_i]
-    end
+      Click.current_month_clicks(@url&.id).each do |click| 
+        @daily_clicks <<  [click['day'],click['clicks'].to_i]
+      end
 
-    Click.platform_stats(@url.id).each do |data|
-      @platform_clicks << [data['platform'],data['clicks'].to_i]
+      Click.browser_stats(@url&.id).each do |data|
+        @browsers_clicks << [data['browser'],data['clicks'].to_i]
+      end
+
+      Click.platform_stats(@url&.id).each do |data|
+        @platform_clicks << [data['platform'],data['clicks'].to_i]
+      end
+    else
+      render 'errors/404.html'
     end
   end
 
@@ -57,7 +61,11 @@ class UrlsController < ApplicationController
   end
 
   def is_valid?(url)
-    response = HTTParty.get(url)
-    response.code == 200 ? true : false
+    begin
+      response = HTTParty.get(url)
+      response.code == 200 ? true : false
+    rescue
+      false
+    end
   end
 end

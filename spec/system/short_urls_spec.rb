@@ -12,6 +12,7 @@ require 'webdrivers'
 RSpec.describe 'Short Urls', type: :system do
   before do
     driven_by :selenium, using: :chrome
+    Url.create(short_url:"ABCDE",original_url:"https://api.rubyonrails.org/v5.2/classes/ActionDispatch/SystemTestCase.html")
     # If using Firefox
     # driven_by :selenium, using: :firefox
     #
@@ -47,6 +48,9 @@ RSpec.describe 'Short Urls', type: :system do
     context 'when url is valid' do
       it 'creates the short url' do
         visit '/'
+        fill_in "url_original_url", with: "https://www.postgresql.org/docs/9.5/using-explain.html"
+        click_on "Shorten URL"
+        expect(page).to have_text("Successfully added the short url")
       end
 
       it 'redirects to the home page' do
@@ -58,27 +62,29 @@ RSpec.describe 'Short Urls', type: :system do
     context 'when url is invalid' do
       it 'does not create the short url and shows a message' do
         visit '/'
-        # add more expections
+        fill_in "url_original_url", with: "https://www.postgre/docs/9.5/using-explain.html"
+        click_on "Shorten URL"
+        expect(page).to have_text("Not able to create a short url")
       end
 
-      it 'redirects to the home page' do
-        visit '/'
-        # add more expections
-      end
+      # it 'redirects to the home page' do
+      #   visit '/'
+      #   # add more expections
+      # end
     end
   end
 
-  describe 'visit' do
-    it 'redirects the user to the original url' do
-      visit visit_path('ABCDE')
-      # add more expections
-    end
+  # describe 'visit' do
+  #   it 'redirects the user to the original url' do
+  #     visit visit_path('ABCDE')
+  #     # add more expections
+  #   end
 
-    context 'when not found' do
-      it 'shows a 404 page' do
-        visit visit_path('NOTFOUND')
-        # expect page to be a 404
-      end
-    end
-  end
+  #   context 'when not found' do
+  #     it 'shows a 404 page' do
+  #       visit visit_path('NOTFOUND')
+  #       # expect page to be a 404
+  #     end
+  #   end
+  #end
 end
